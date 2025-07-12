@@ -101,4 +101,47 @@ All using **EntityManager** or **Spring Data JPA**
 
 ---
 
+## Spring Data JPA 
 
+* The JPA code is easy to write, why do i need Spring Data JPA?
+  
+    JPA itself makes it easier compared to plain JDBC.
+
+    But when you're using Spring Data JPA, it becomes even easier, more powerful, and less error-prone.
+
+
+### JPA (Manual via `EntityManager`)
+
+```java
+@Repository
+public class CourseJpaRepository {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public Course findById(Long id) {...}
+    public void deleteById(Long id) {...}
+    public void insert(Course course) {...}
+}
+```
+
+*  Cleaner than JDBC
+*  but Still writing boilerplate for **common operations**
+
+### Spring Data JPA
+
+```java
+public interface CourseSpringDataJpaRepository extends JpaRepository<Course, Long> {
+}
+```
+
+That’s it. Spring Data JPA gives you:
+
+* `save()`
+* `findById()`
+* `findAll()`
+* `deleteById()`
+* `count()`
+* and more… **automatically**
+
+---
