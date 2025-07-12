@@ -25,6 +25,21 @@ public class CourseJpaRepository {
 
 ```
 
+### Mapping `Course` to `course` Table 
+
+```java
+
+@Entity
+public class Course {
+    
+    @Id
+    private long id;
+    private String name;
+    private String author;
+
+    // constructors, getters, setters
+}
+```
 
 ## CommandLineRunner
 
