@@ -91,7 +91,7 @@ public class CourseJdbcRepository {
 ``` java
 
 @Component
-public class CourseJdbcCommandLine implements CommandLineRunner {
+public class CourseCommandLineRunner implements CommandLineRunner {
 
     @Autowired
     CourseJdbcRepository repository;
