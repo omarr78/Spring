@@ -44,4 +44,61 @@ public void deleteTodo(int id) {
 
 ``` 
 
+## JPA (Java Persistence API)
+
+* As we saw that when we are using Spring JDBC the Java code is simple and Works fine for simple queries and single-table operations.
+* However, the queries might get really complex in real-world applications (Multiple tables, Joins, Subqueries, ...)
+
+* JPA Uses a Different Approach: Instead of writing SQL manually, you:
+    
+    * Map Java Classes to Database Tables
+    * Let the JPA handle queries
+
+### Example: Mapping `Course` to `course` Table & Insert
+
+```java
+
+@Entity
+public class Course {
+    
+    @Id
+    private long id;
+    private String name;
+    private String author;
+
+    // constructors, getters, setters
+}
+
+
+@Repository
+public class CourseJpaRepository {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public Course insert(Course course) {
+        return entityManager.merge(course);
+    }
+
+}
+
+```
+
+> This Java class becomes a **JPA Entity**
+>
+> It directly represents a **row** in the `course` table
+
+### With JPA, You Can:
+
+* **Insert**
+* **Update**
+* **Delete**
+* **Find by ID**
+
+All using **EntityManager** or **Spring Data JPA**
+→ No need to write SQL manually
+
+
+---
+
 
