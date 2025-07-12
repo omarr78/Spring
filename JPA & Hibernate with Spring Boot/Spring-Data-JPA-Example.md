@@ -1,0 +1,124 @@
+## Spring Data JPA Class
+
+``` java
+
+public interface CourseSpringDataJpaRepository extends JpaRepository<Course, Long> {
+    List<Course> findByAuthor(String author);
+    List<Course> findByName(String name);
+}
+
+```
+
+### **Derived Query Methods** (Query Method Naming Strategy)
+
+    List<Course> findByAuthor(String author);
+    List<Course> findByName(String name);
+
+* The two methods are part of one of the most powerful features of **Spring Data JPA**:
+* Spring Data JPA can **automatically generate SQL/JPQL queries** for you based on **method names** in your repository interface.
+
+### How Does It Work?
+
+Spring Data JPA reads the **method name** and:
+
+1. Recognizes `findBy...`
+2. Maps (`Author`, `Name`) to **fields in your `Course` entity**
+3. Generates a query like:
+
+```sql
+SELECT * FROM course WHERE author = ?
+```
+
+### You Can Also Do More:
+
+| Method Name                           | SQL Generated Example                     |
+| ------------------------------------- | ----------------------------------------- |
+|  findByNameContaining("Spring")       |  WHERE name LIKE '%Spring%'               |
+|  findByAuthorAndName("omar", "Java")  |  WHERE author = 'omar' AND name = 'Java'  |
+|  findByNameOrderByIdDesc()            |  ORDER BY id DESC                         |
+
+---
+
+
+### Mapping `Course` to `course` Table 
+
+```java
+
+@Entity
+public class Course {
+    
+    @Id
+    private long id;
+    private String name;
+    private String author;
+
+    // constructors, getters, setters
+}
+```
+
+## CommandLineRunner
+
+### CommandLineRunner is a Spring Boot interface that lets you run specific code after the Spring application has fully started.
+
+
+* Spring Boot starts the application.
+* Spring creates all beans (your services, repos, etc.).
+* After the context is ready, it runs all beans that implement CommandLineRunner.
+* The run() method is executed automatically.
+
+
+
+
+``` java
+
+@Component
+public class CourseCommandLineRunner implements CommandLineRunner {
+
+    @Autowired
+    private CourseSpringDataJpaRepository repository;
+
+    @Override
+    public void run(String... args) {
+        repository.save(new Course(1,"Java","author1"));
+        // entityManager.merge(course);
+        // Hibernate: insert into course (author,name,id) values (?,?,?)
+
+        repository.save(new Course(2,"Spring Boot","author2"));
+        repository.save(new Course(3,"SQL","author3"));
+        repository.save(new Course(4,"JPA","author4"));
+
+        repository.deleteById(4L);
+        // Course course = entityManager.find(Course.class, id);
+        // entityManager.remove(course);
+        // Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+        // Hibernate: delete from course where id=?
+
+
+        System.out.println(repository.findById(1L));
+        // return entityManager.find(Course.class, id);
+        // Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+
+        System.out.println(repository.findById(1L));
+        System.out.println(repository.findById(2L));
+        System.out.println(repository.findById(3L));
+
+        System.out.println(repository.findByAuthor("author1"));
+        System.out.println(repository.findByName("SQL"));
+    }
+}
+
+```
+### output
+
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+    Optional[Course{id=1, name='Java', author='author1'}]
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+    Optional[Course{id=2, name='Spring Boot', author='author2'}]
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+    Optional[Course{id=3, name='SQL', author='author3'}]
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.author=?
+    [Course{id=1, name='Java', author='author1'}]
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.name=?
+    [Course{id=3, name='SQL', author='author3'}]
+
+
