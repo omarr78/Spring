@@ -5,7 +5,7 @@
 public User retrieveUser(@PathVariable int id){
     User user = service.findUserById(id);
     if(user == null){
-        throw new UserNotFoundException("id:" + id);
+        throw new UserNotFoundException("user with id "+ id +" not found");
     }
     return user;
 }
@@ -29,7 +29,7 @@ If this exception is thrown, respond with HTTP `404` (More descriptive and contr
 
 So when you do:
   
-    throw new UserNotFoundException("id:5");
+    throw new UserNotFoundException("user with id "+ id +" not found");
 
 The user gets this:
 
@@ -39,7 +39,7 @@ HTTP/1.1 404 Not Found
   "timestamp": "...",
   "status": 404,
   "error": "Not Found",
-  "message": "id:5",
+  "message": "user with id 5 not found",
   "path": "/users/5"
 }
 ```
@@ -50,7 +50,7 @@ instead of this
 "timestamp": "...",
 "status": 500,
 "error": "Internal Server Error",
-"message": "id:5",
+"message": "user with id 5 not found",
 "path": "/users/5"
 ```
 
