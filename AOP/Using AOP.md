@@ -22,6 +22,29 @@ public class LoggingAspect {
         // Logs the method signature before the actual method execution
         logger.info("Before Aspect - Method is called {}", joinPoint);
     }
+
+    @After("execution(* com.learning.spring_aop.*.*.*(..))")
+    public void logMethodCallAfterExecution(JoinPoint joinPoint) {
+        logger.info("After Aspect - Method is called {}" , joinPoint);
+    }
+
+    @AfterThrowing(
+            pointcut = "execution(* com.learning.spring_aop.*.*.*(..))",
+            throwing = "exception"
+    )
+    public void logMethodCallAfterException(JoinPoint joinPoint,Exception exception) {
+        logger.info("AfterThrowing Aspect - {} has thrown an exception {}"
+                ,joinPoint,exception);
+    }
+
+    @AfterReturning(
+            pointcut = "execution(* com.learning.spring_aop.*.*.*(..))",
+            returning = "result"
+    )
+    public void logMethodCallAfterReturning(JoinPoint joinPoint,Object result) {
+        logger.info("AfterReturning Aspect - {} has returned {}"
+                ,joinPoint,result);
+    }
 }
 
 
@@ -66,3 +89,12 @@ This is an **AspectJ pointcut expression** that tells Spring AOP where to apply 
 AspectJ or Spring AOP
 * Join Point
    * When pointcut condition is true, the advice is executed. A specific execution instance of an advice is called a Join Point.
+ 
+---
+
+* @Before - Do something before a method is called
+* @After - Do something after a method is executed irrespective of whether:
+    * 1: Method executes successfully OR
+    * 2: Method throws an exception
+* @AfterReturning Do something ONLY when a method executes successfully
+* @AfterThrowing - Do something ONLY when a method throws an exception
