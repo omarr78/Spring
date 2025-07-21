@@ -98,3 +98,48 @@ AspectJ or Spring AOP
     * 2: Method throws an exception
 * @AfterReturning Do something ONLY when a method executes successfully
 * @AfterThrowing - Do something ONLY when a method throws an exception
+
+---
+
+## @Around Do something before and after a method execution
+
+### code Example
+
+``` java
+
+package com.learning.spring_aop.aspects;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
+
+@Aspect
+@Configuration
+public class PerformanceTrackingAspect {
+
+    private Logger logger = LoggerFactory.getLogger(PerformanceTrackingAspect.class);
+
+    @Around("execution(* com.learning.spring_aop.*.*.*(..))")
+    public Object findExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    // here we need ProceedingJoinPoint insted of joinPoint to proceed the execution method
+
+        long StartTime = System.currentTimeMillis();
+
+        // Proceed with the actual method execution
+        Object proceed = proceedingJoinPoint.proceed();
+
+        long EndTime = System.currentTimeMillis();
+
+        long ExecutionTime = EndTime - StartTime;
+
+        logger.info("Execution time of {} is {}", proceedingJoinPoint.getSignature().getName(), ExecutionTime);
+
+        return proceed;
+    }
+}
+
+
+```
