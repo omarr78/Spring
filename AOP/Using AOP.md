@@ -17,7 +17,7 @@ public class LoggingAspect {
     private Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     // Advice: This method runs BEFORE the execution of any method in the specified package
-    @Before("execution(* com.learning.spring_aop.*.*.*(..))")
+    @Before("execution(* com.learning.spring_aop.*.*.*(..))") // pointcut
     public void logMethodCall(JoinPoint joinPoint) {  // The JoinPoint gives info like method name and arguments.
         // Logs the method signature before the actual method execution
         logger.info("Before Aspect - Method is called {}", joinPoint);
@@ -52,3 +52,17 @@ This is an **AspectJ pointcut expression** that tells Spring AOP where to apply 
 
 ---
 
+## Important Terminology
+
+* Advice - What code to execute?
+    * Example: Logging, Authentication
+
+* Pointcut - Expression that identifies method calls to be intercepted
+* Aspect - A combination of
+  * Advice - what to do AND
+  * Pointcut- when to intercept a method call
+
+* Weaver - Weaver is the framework that implements AOP
+AspectJ or Spring AOP
+* Join Point
+   * When pointcut condition is true, the advice is executed. A specific execution instance of an advice is called a Join Point.
